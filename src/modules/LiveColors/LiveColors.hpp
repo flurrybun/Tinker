@@ -1,0 +1,28 @@
+#pragma once
+
+#include "../../Module.hpp"
+#include <Geode/modify/EditorUI.hpp>
+
+namespace tinker::ui {
+    class ColorVisualButton;
+}
+
+class $editorModule(LiveColors) {
+    CCMenu* m_colorsMenu;
+    std::vector<tinker::ui::ColorVisualButton*> m_buttons;
+    int m_lastBtnCount = 0;
+    int m_availableBtnCount = 0;
+
+    void onEditor() override;
+};
+
+class $modify(LCEditorUI, EditorUI) {
+    $registerEditorHooks(LiveColors, true)
+
+	static void _onModify(auto& self) {
+        (void) self.setHookPriorityAfterPost("EditorUI::init", "hjfod.betteredit");
+    }
+    
+    void showUI(bool show);
+	void checkColors(float dt);
+};
