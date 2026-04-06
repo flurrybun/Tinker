@@ -24,7 +24,7 @@ bool NECCTextInputNode::init(float p0, float p1, char const* p2, char const* p3,
 
         auto spr = CCSprite::createWithSpriteFrameName("edit_delCBtn_001.png");
 
-        auto btnSpr = ButtonSprite::create(spr, 30, 1, 30, 1, false, "GJ_button_06-uhd.png", false);
+        auto btnSpr = ButtonSprite::create(spr, 30, 1, 30, 1, false, "GJ_button_06.png", false);
         btnSpr->setScale(0.3f);
 
         auto btn = CCMenuItemExt::createSpriteExtra(btnSpr, [this] (auto sender) {
