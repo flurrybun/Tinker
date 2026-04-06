@@ -18,6 +18,8 @@ namespace tinker::ui {
             std::string name;
             int id;
         };
+        
+        ~SearchField();
 
         static SearchField* create(OSEditorUI* editorUI);
 
@@ -38,7 +40,7 @@ namespace tinker::ui {
 
         OSEditorUI* m_editorUI;
         geode::TextInput* m_searchInput;
-        geode::NineSlice* m_searchBG;
+        Ref<geode::NineSlice> m_searchBG;
         geode::Button* m_clearButton;
     };
 }

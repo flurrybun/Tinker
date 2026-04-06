@@ -8,6 +8,10 @@
 
 using namespace tinker::ui;
 
+SearchField::~SearchField() {
+    m_searchBG->removeAllChildren();
+}
+
 Result<SearchField::ItemInformation> SearchField::infoForID(unsigned int id) {
     auto fields = m_editorUI->m_fields.self();
 

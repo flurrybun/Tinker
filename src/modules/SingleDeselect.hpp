@@ -3,7 +3,11 @@
 #include "../Module.hpp"
 #include <Geode/modify/EditorUI.hpp>
 
-class $editorModule(SingleDeselect) {};
+class $editorModule(SingleDeselect) {
+	void onEditor() override;
+
+	bool m_keyHeld;
+};
 
 class $modify(SDEditorUI, EditorUI) {
 	$registerEditorHooks(SingleDeselect)

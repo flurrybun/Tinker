@@ -8,14 +8,14 @@
 	},
 	"id": "alphalaneous.tinker",
 	"name": "Tinker",
-	"version": "v1.0.0-beta.3",
+	"version": "v1.0.0-beta.4",
 	"developer": "Alphalaneous",
 	"description": "Editor Revamped",
 	"dependencies": {
 		"geode.node-ids": "v1.23.3",
 		"alphalaneous.good_grid": "v1.1.4",
 		"alphalaneous.alphas_geode_utils": "v1.2.4",
-		"alphalaneous.alphas-ui-pack": "v1.0.7",
+		"alphalaneous.alphas-ui-pack": "v1.0.8",
 		"alphalaneous.editortab_api": "v2.0.12",
 		"alphalaneous.level-storage-api": "v1.0.0",
 		"spaghettdev.named-editor-groups": {
@@ -450,16 +450,12 @@
 			"default": true,
 			"name": "Enabled"
 		},
-		"SingleDeselect-modifier-key": {
-			"name": "Modifier Key",
-			"description": "Modifier key to hold click to deselect.",
-			"type": "string",
-			"default": "Shift",
-			"one-of": [
-				"Alt",
-				"Shift",
-				"Ctrl"
-			]
+		"SingleDeselect-key": {
+			"name": "Deselect Modifier Key",
+			"description": "Key to hold click to deselect.",
+			"type": "keybind",
+			"default": ["P"],
+			"category": "editor"
 		},
 		"ThatPasteButton-title": {
 			"type": "title",

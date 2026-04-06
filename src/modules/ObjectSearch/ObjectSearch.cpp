@@ -21,6 +21,7 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
     auto fields = m_fields.self();
 
     fields->m_searchField = tinker::ui::SearchField::create(this);
+    fields->m_searchField->defocus();
     m_uiItems->addObject(fields->m_searchField);
 
     alpha::editor_tabs::addTab("all-objects"_spr, alpha::editor_tabs::BUILD, [this, fields] () {
@@ -50,7 +51,7 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
         }
         else {
             fields->m_searchField->defocus();
-            fields->m_searchField->removeFromParentAndCleanup(false);
+            fields->m_searchField->removeFromParent();
 
             if (LiveColors::isEnabled()) {
                 LiveColors::get()->showMenu(true);
@@ -98,11 +99,6 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
                     ObjectIDDisplay::AddObjectIDLabelEvent().send(newCmi);
                 }
 
-                cmi->setUserObject("shared"_spr, newCmi);
-                newCmi->setUserObject("shared"_spr, cmi);
-
-                newCmi->release();
-
                 fields->m_items[cmi->m_objectID] = tinker::ui::SearchField::ItemInformation{newCmi, std::string(ObjectNames::get()->getName(newCmi->m_objectID).unwrapOrDefault()), newCmi->m_objectID};
                 fields->m_orderedItems.push_back(&fields->m_items[cmi->m_objectID]);
             }
@@ -130,6 +126,11 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
     }));
 
     return true;
+}
+
+void OSEditorUI::onPause(CCObject* sender) {
+    m_fields->m_searchField->defocus();
+    EditorUI::onPause(sender);
 }
 
 void OSEditorUI::updateCreateMenu(bool selectTab) {

@@ -20,4 +20,6 @@ class $modify(OSEditorUI, EditorUI) {
     bool init(LevelEditorLayer* editorLayer);
     void updateCreateMenu(bool selectTab);
     CreateMenuItem* getCreateBtn(int id, int bg);
+    void onPause(CCObject* sender);
+
 };

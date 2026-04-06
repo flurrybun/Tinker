@@ -15,7 +15,6 @@ void SDEditorUI::deselectSpecificObject() {
         bool isOnCurrentEditorLayer1 = obj->m_editorLayer == levelEditorLayer->m_currentLayer;
         bool isOnCurrentEditorLayer2 = (obj->m_editorLayer2 == levelEditorLayer->m_currentLayer) && obj->m_editorLayer2 != 0;
 
-
         if (objRect.containsPoint(mousePosToNode) && (currentLayer == -1 || (isOnCurrentEditorLayer1 || isOnCurrentEditorLayer2))) {
             deselectObject(obj);
             break;
@@ -50,20 +49,14 @@ void SDEditorUI::ccTouchEnded(CCTouch* p0, CCEvent* p1) {
 }
 
 bool SDEditorUI::getKeyPressed() {
-    auto kb = CCDirector::get()->getKeyboardDispatcher();
-
-    std::string setting = SingleDeselect::getSetting<std::string, "modifier-key">();
-
-    if (setting == "Shift"){
-        return kb->getShiftKeyPressed();
-    }
-    if (setting == "Alt"){
-        return kb->getAltKeyPressed();
-    }
-    if (setting == "Ctrl"){
-        return kb->getControlKeyPressed();
-    }
-
-    return false;
+    return SingleDeselect::get()->m_keyHeld;
 }
 
+void SingleDeselect::onEditor() {
+    m_editorUI->addEventListener(
+        KeybindSettingPressedEventV3(Mod::get(), "SingleDeselect-key"),
+        [this](Keybind const& keybind, bool down, bool repeat, double timestamp) {
+            m_keyHeld = down;
+        }
+    );
+}

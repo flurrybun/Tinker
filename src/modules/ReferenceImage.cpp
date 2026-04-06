@@ -98,9 +98,9 @@ void RITextGameObject::onImageFail() {
     updateOrientedBox();
 }
 
-
 bool RITextGameObject::isReferenceImage() {
-    return m_fields->m_isReferenceImage;
+    auto pair = tinker::utils::splitIntoPair(m_text);
+    return pair.first == "image";
 }
 
 void RITextGameObject::setAttributes() {
@@ -209,9 +209,6 @@ void RIEditorUI::onImport(CCObject* sender) {
 
             auto obj = m_selectedObject;
 
-            std::string objStr = fmt::format("1,914,31,{}", utils::base64::encode("image:" + utils::base64::encode(utils::string::pathToString(path))));
-            auto objects = pasteObjects(objStr, true, true);
-
             CCPoint pos;
 
             if (obj) {
@@ -223,7 +220,13 @@ void RIEditorUI::onImport(CCObject* sender) {
                 pos = CCPoint{localPosAR.x, localPosAR.y + m_toolbarHeight};
             }
 
+            std::string objStr = fmt::format("1,914,2,{},3,{},31,{}", pos.x, pos.y, utils::base64::encode("image:" + utils::base64::encode(utils::string::pathToString(path))));
+            auto objects = pasteObjects(objStr, true, true);
+            
             for (auto obj : objects->asExt<GameObject*>()) {
+                obj->m_positionX = pos.x;
+                obj->m_positionY = pos.y;
+
                 obj->setPosition(pos);
             }
 
