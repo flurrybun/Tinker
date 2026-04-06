@@ -219,7 +219,7 @@ void IGVSetGroupIDLayer::regenerateGroupView() {
     fields->m_scrollLayer->ignoreAnchorPointForPosition(false);
     fields->m_scrollLayer->addChild(menuContainer);
     fields->m_scrollLayer->setID("groups-list-scroll-layer"_spr);
-    fields->m_scrollLayer->setTouchPriority(-130);
+    fields->m_scrollLayer->setTouchPriority(-504);
 
     m_mainLayer->addChild(fields->m_scrollLayer);
 
