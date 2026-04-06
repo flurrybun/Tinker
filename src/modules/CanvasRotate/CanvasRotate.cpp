@@ -89,6 +89,10 @@ void CREditorUI::clickOnPosition(CCPoint p0) {
 bool CREditorUI::ccTouchBegan(CCTouch* touch, CCEvent* p1) {
     auto module = CanvasRotate::get();
 
+    if (m_editorLayer->m_playbackMode == PlaybackMode::Playing) {
+        return EditorUI::ccTouchBegan(touch, p1);
+    }
+    
     if ((m_swipeEnabled || CCKeyboardDispatcher::get()->getShiftKeyPressed()) && m_selectedMode == 3) {
         return EditorUI::ccTouchBegan(touch, p1);
     }
