@@ -112,15 +112,6 @@ bool SearchField::init(OSEditorUI* editorUI) {
     setContentSize({300, 45});
 
     m_searchInput = geode::TextInput::create(getContentWidth() - 55, "Search...");
-    m_searchInput->setCallback([this] (const std::string& text) {
-        m_searchInput->runAction(CallFuncExt::create([this, text] {
-            auto arr = generateItemArrayForSearch(text);
-
-            auto cols = GameManager::get()->getIntGameVariable(GameVar::EditorButtonsPerRow);
-            auto rows = GameManager::get()->getIntGameVariable(GameVar::EditorButtonRows);
-            m_editorUI->m_fields->m_searchBar->loadFromItems(arr, cols, rows, false);
-        }));
-    });
     m_searchInput->setDelegate(this);
     m_searchInput->setCommonFilter(CommonFilter::Any);
     m_searchInput->setPosition({6 + m_searchInput->getContentWidth() / 2, getContentHeight() / 2});
@@ -136,13 +127,29 @@ bool SearchField::init(OSEditorUI* editorUI) {
     setScale(0.6f);
 
     m_clearButton = geode::Button::createWithSpriteFrameName("GJ_longBtn07_001.png", [this] (auto sender) {
+        m_lockClose = true;
         m_searchInput->setString("", true);
+        m_searchInput->focus();
+    });
+
+    m_clearButton->setSelectCallback([this] (auto sender) {
+        m_lockClose = true;
+        m_searchInput->focus();
+        textInputShouldOffset(m_searchInput->getInputNode(), m_yOffset);
     });
 
     m_clearButton->setPosition({getContentWidth() - 6 - m_clearButton->getContentWidth() / 2, getContentHeight() / 2});
     m_searchBG->addChild(m_clearButton);
 
+    m_tabBG = geode::NineSlice::create("square02b_001.png");
+    m_tabBG->setOpacity(127);
+    m_tabBG->setColor({0, 0, 0});
+
     return true;
+}
+
+void SearchField::setOrigY() {
+    m_origY = getPositionY();
 }
 
 void SearchField::defocus() {
@@ -164,16 +171,80 @@ void SearchField::onExit() {
 }
 
 bool SearchField::clickBegan(TouchEvent* touch) {
+    if (m_inputFocused) return true;
     if (!nodeIsVisible(this) || !alpha::utils::isPointInsideNode(this, touch->getLocation())) return false;
     return true;
 }
 
+void SearchField::textChanged(CCTextInputNode* node) {
+    m_searchInput->runAction(CallFuncExt::create([this, node] {
+        auto arr = generateItemArrayForSearch(node->getString());
+
+        auto cols = GameManager::get()->getIntGameVariable(GameVar::EditorButtonsPerRow);
+        auto rows = GameManager::get()->getIntGameVariable(GameVar::EditorButtonRows);
+
+        auto fields = m_editorUI->m_fields.self();
+
+        fields->m_searchBar->loadFromItems(arr, cols, rows, false);
+
+        #ifdef GEODE_IS_MOBILE
+        fields->m_searchBar->setPositionY(m_yOffset + getScaledContentHeight() + 10);
+        #endif
+    }));
+}
+
+void SearchField::textInputOpened(CCTextInputNode* node) {
+    #ifdef GEODE_IS_MOBILE
+    m_inputFocused = true;
+
+    auto tab = m_editorUI->m_fields->m_searchBar;
+
+    setPositionY(m_yOffset);
+    tab->setPositionY(m_yOffset + getScaledContentHeight() + 10);
+    m_lockClose = true;
+    runAction(CallFuncExt::create([this] {
+        m_lockClose = false;
+    }));
+    #endif
+}
+
 void SearchField::textInputClosed(CCTextInputNode* node) {
-    setPositionY(m_origY);
+    #ifdef GEODE_IS_MOBILE
+    runAction(CallFuncExt::create([this] {
+        if (!m_lockClose) {
+            m_inputFocused = false;
+
+            setPositionY(m_origY);
+
+            auto tab = m_editorUI->m_fields->m_searchBar;
+
+            tab->setPositionY(0);
+            m_tabBG->removeFromParent();
+
+            tab->setZOrder(10);
+        }
+        m_lockClose = false;
+    }));
+    #endif
 }
 
 void SearchField::textInputShouldOffset(CCTextInputNode* node, float yOffset) {
-    log::info("offset: {}", yOffset);
-    m_origY = getPositionY();
-    setPositionY(yOffset);
+    #ifdef GEODE_IS_MOBILE
+    m_yOffset = yOffset;
+    runAction(CallFuncExt::create([this] {
+        setPositionY(m_yOffset);
+
+        auto tab = m_editorUI->m_fields->m_searchBar;
+        tab->setPositionY(m_yOffset + getScaledContentHeight() + 10);
+
+        m_tabBG->setContentSize(tab->getScaledContentSize() + CCSize{0, 10});
+        m_tabBG->setPosition(tab->getPosition() + CCPoint{0, tab->getScaledContentHeight() / 2});
+        tab->setZOrder(20);
+        m_tabBG->setZOrder(19);
+
+        m_tabBG->removeFromParent();
+
+        m_editorUI->addChild(m_tabBG);
+    }));
+    #endif
 }

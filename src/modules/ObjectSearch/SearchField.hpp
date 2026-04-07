@@ -27,10 +27,14 @@ namespace tinker::ui {
         void onExit() override;
 
         void textInputShouldOffset(CCTextInputNode* node, float yOffset) override;
+        void textInputOpened(CCTextInputNode* node) override;
         void textInputClosed(CCTextInputNode* node) override;
+        void textChanged(CCTextInputNode* node) override;
 
         void defocus();
         void focus();
+
+        void setOrigY();
 
         virtual bool clickBegan(TouchEvent* touch) override;
 
@@ -45,7 +49,11 @@ namespace tinker::ui {
         geode::TextInput* m_searchInput;
         Ref<geode::NineSlice> m_searchBG;
         geode::Button* m_clearButton;
+        Ref<geode::NineSlice> m_tabBG;
 
         float m_origY;
+        float m_yOffset;
+        bool m_lockClose;
+        bool m_inputFocused;
     };
 }

@@ -34,19 +34,10 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
     }, [this, fields] (bool state, cocos2d::CCNode*) {
         if (!fields->m_searchField) return;
         if (state && !fields->m_searchField->getParent()) {
-            float buildTabHeight = 0;
-            float scale = 1.f;
-            if (auto node = getChildByID("build-tabs-menu")) {
-                buildTabHeight = node->getScaledContentHeight();
-                scale = node->getScale();
-            }
-
             #ifndef GEODE_IS_MOBILE
             fields->m_searchField->focus();
             #endif
 
-            fields->m_searchField->setPosition({getContentWidth() / 2, m_toolbarHeight + 5.f + buildTabHeight});
-            fields->m_searchField->setScale(0.6f * scale);
             addChild(fields->m_searchField);
 
             if (LiveColors::isEnabled()) {
@@ -64,6 +55,17 @@ bool OSEditorUI::init(LevelEditorLayer* editorLayer) {
     });
     
     runAction(CallFuncExt::create([this, fields, objectSearch] {
+        float buildTabHeight = 0;
+        float scale = 1.f;
+        if (auto node = getChildByID("build-tabs-menu")) {
+            buildTabHeight = node->getScaledContentHeight();
+            scale = node->getScale();
+        }
+
+        fields->m_searchField->setPosition({getContentWidth() / 2, m_toolbarHeight + 5.f + buildTabHeight});
+        fields->m_searchField->setScale(0.6f * scale);
+        fields->m_searchField->setOrigY();
+
         auto bar = fields->m_searchBar;
         for (auto tab : alpha::editor_tabs::getAllTabs().unwrap()) {
             auto ebb = typeinfo_cast<EditButtonBar*>(tab);
