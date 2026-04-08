@@ -1,6 +1,7 @@
 #include "ImprovedLinkControls.hpp"
 
 void ImprovedLinkControls::onEditor() {
+    #ifndef GEODE_IS_MOBILE
     auto zoomMenu = m_editorUI->getChildByID("zoom-menu");
     auto linkMenu = m_editorUI->getChildByID("link-menu");
     linkMenu->setContentSize({ 125.f, zoomMenu->getContentHeight() + 29.f });
@@ -12,6 +13,7 @@ void ImprovedLinkControls::onEditor() {
     linkMenu->runAction(CallFuncExt::create([linkMenu] {
         linkMenu->setScale(0.8f * linkMenu->getScale());
     }));
+    #endif
 }
 
 void ILCEditorUI::onGroupSticky(CCObject* sender) {
