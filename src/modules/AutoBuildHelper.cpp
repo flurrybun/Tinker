@@ -57,7 +57,7 @@ void AutoBuildHelper::onEditorPauseLayer(EditorPauseLayer* editorPauseLayer) {
 
 void AutoBuildHelper::onToggleAutoBuildHelper(CCObject* sender) {
     auto toggler = static_cast<CCMenuItemToggler*>(sender);
-    m_autoBuildHelperEnabled = toggler->isOn();
+    AutoBuildHelper::get()->m_autoBuildHelperEnabled = toggler->isOn();
 }
 
 CCArray* ABHEditorUI::pasteObjects(gd::string p0, bool p1, bool p2) {

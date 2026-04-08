@@ -1,3 +1,8 @@
+# 1.0.0-beta.9
+- <c-dddddd>Fix Auto "Build Helper" not working</c>
+- <c-dddddd>Fix Paste Warnings showing when clicking the buttons while they are disabled</c>
+- <c-dddddd>Adjust scroll delta to prevent accidental scrolling when clicking an object in the build tab</c>
+
 # 1.0.0-beta.8
 - <c-dddddd>Depend on Better Touch Prio
 
