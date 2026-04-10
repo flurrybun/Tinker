@@ -43,8 +43,8 @@ body:
       label: Crash Replication
       description: Can you replicate the steps to cause this crash?
       options:
-      - "Yes"
       - "No"
+      - "Yes"
     validations:
       required: true
 
