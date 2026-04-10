@@ -192,10 +192,9 @@ void CREditorUI::scrollWheel(float y, float x) {
 
     #ifdef GEODE_IS_WINDOWS
         x *= -1;
-        y *= -1;
     #endif
 
-    auto newPos = tinker::utils::rotatePointAroundPivot({x, -y}, {0, 0}, rot);
+    auto newPos = tinker::utils::rotatePointAroundPivot({x, y}, {0, 0}, rot);
 
     EditorUI::scrollWheel(newPos.y, newPos.x);
 }
