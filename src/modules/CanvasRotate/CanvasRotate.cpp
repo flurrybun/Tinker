@@ -26,12 +26,11 @@ void CanvasRotate::onEditor() {
     m_editorLoaded = true;
 }
 
-$on_mod(Loaded) {
-    bool enabled = Mod::get()->getSettingValue<bool>("CanvasRotate-enabled");
-    toggleBetterEditHook(!enabled);
+$on_game(Loaded) {
+    toggleBetterEditHook(!CanvasRotate::isEnabled());
 
     listenForSettingChanges<bool>("CanvasRotate-enabled", [] (bool enabled) {
-        toggleBetterEditHook(!enabled);
+        toggleBetterEditHook(!CanvasRotate::isEnabled());
     });
 }
 
@@ -172,8 +171,14 @@ void CREditorUI::scrollWheel(float y, float x) {
         float zoomFactor = 1.05f;
         float zoomSpeed = 0.2f;
 
+        float zoomLimit = 4.f;
+
+        if (tinker::utils::getMod<"hjfod.betteredit">()) {
+            zoomLimit = 10000000.f;
+        }
+
         float newScale = currentScale * std::powf(zoomFactor, -y * zoomSpeed);
-        newScale = std::min(std::max(newScale, 0.1f), 4.0f);
+        newScale = std::min(std::max(newScale, 0.1f), zoomLimit);
 
         float scaleRatio = newScale / currentScale;
         auto newPos = mousePos - offset * scaleRatio;
@@ -185,7 +190,12 @@ void CREditorUI::scrollWheel(float y, float x) {
         return;
     }
 
-    auto newPos = tinker::utils::rotatePointAroundPivot({-x, y}, {0, 0}, rot);
+    #ifdef GEODE_IS_WINDOWS
+        x *= -1;
+        y *= -1;
+    #endif
+
+    auto newPos = tinker::utils::rotatePointAroundPivot({x, -y}, {0, 0}, rot);
 
     EditorUI::scrollWheel(newPos.y, newPos.x);
 }

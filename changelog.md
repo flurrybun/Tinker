@@ -1,3 +1,8 @@
+# 1.0.0-beta.14
+- <c-dddddd>Infinite zoom now works with BetterEdit again</c>
+- <c-dddddd>Fix horizontal scroll breaking</c>
+- <c-dddddd>Use natural scrolling on Mac</c>
+
 # 1.0.0-beta.13
 - <c-dddddd>Hotfix for changing any setting causing a crash when opening the editor</c>
 
